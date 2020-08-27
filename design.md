@@ -2,17 +2,17 @@
 
 ## Project Goals  
 The anime-alert projects goal is to create a flexible python package for developers that will do the following in multiple contexts (CLI, REST API, etc.):  
-- Create and manage lists of Anime to receive notifications about (new episodes, options for watching, etc.)  
+- Create and manage lists of Anime to receive notifications about (new episodes, options for watching, etc.). 
 - Allow end users to subscribe to, clone and/or modify created Anime lists    
 - Allow end users to manage how they will be notified (email or text)  
 - Allow developers to manage the content of notifications
 - Allow developers to manage which data sources they use to obtain Anime data
 
-This project will include a REST API and CLI interface. Whether these will be in separate repos or the same one as domain logicis TBD.
+This project will include a REST API and CLI interface. Whether these will be in separate repos or the same one as the domain logic stuff is TBD.
 
 ## Deliverables  
 1. Milestone - Domain Logic (Rough Draft)
-    1. Functional requirements - expected operations (user stories) for the following functionality:
+    1. User requirements - expected operations (user stories) for the following functionality:
         - anime list management
         - anime list subscriber management  
         - subscriber notification methods management (email, text, etc.)
