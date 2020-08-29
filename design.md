@@ -14,7 +14,7 @@ This project will include a REST API and CLI interface. Whether these will be in
 1. Milestone - Domain Logic (Rough Draft)
     1. User requirements - expected operations (user stories) for the following functionality:
         - anime list management
-        - anime list subscriber management  
+        - subscriber management  
         - subscriber notification methods management (email, text, etc.)
         - notification content management (what goes in notifications sent to subscribers)
         - anime data source management (where do we get info about anime?)
