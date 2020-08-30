@@ -194,3 +194,6 @@
         2. data requirements
            - none
 
+# Functional Requirements
+1. Currently Airing Anime Data Retrieval
+    1. Currently airing anime and their data will be retrieved from myanimelist.net
