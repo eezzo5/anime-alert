@@ -15,17 +15,17 @@
 
 
 2. Subscriber Notification Methods Management
-    3. add a notification method
+    1. add a notification method
         1. behavioral requirements
            - users will add notification methods by typing in info, which will redirect to login page of list site to authorize viewing of list data. After login they be redirected back to site and see message saying "Congrats! you will now be notified, here is a link to modify notification settings"
         2. data requirements
            - phone or email
-    6. remove notification method
+    2. remove notification method
         1. behavioral requirements
            - users should be able to remove their notification method by typing in their notification method info which triggers a notification messages (containing links) 
         2. data requirements
            - phone or email
-    7. edit a notification method
+    3. edit a notification method
         1. behavioral requirements
            - users should be able to edit their notification method by typing in their notification method info which triggers a notification messages (containing links to landing page) 
         2. data requirements
