@@ -1,9 +1,12 @@
-#class StreamingSite:
-    #def get_episode_streaming_link(self, anime):
+class StreamingSite:
+    def get_episode_streaming_link(self, anime):
+        pass
 class AnimeListSite:
     import requests
-    #def can_connect(self):
-    #def auth_user(self):
+    def can_connect(self):
+        pass
+    def auth_user(self):
+        pass
     def get_user_anime(self, user):
         query = '''
             query ($id: Int) {
@@ -52,13 +55,17 @@ class AnimeChecker:
                     # check_new_episode
                     # if new
                         # send notification and update num_released episodes
-    #def stop(self):
-    #def get_status(self):
-    #def add_anime(self, id):
-        #''' adds anime from list to check for new eps '''
+    def stop(self):
+        pass
+    def get_status(self):
+        pass
+    def add_anime(self, id):
+        ''' adds anime from list to check for new eps '''
+        pass
         # will add this later when I've learned more about abstracting data interfaces
-    #def remove_anime(self, id):
-        #''' removes anime from list to check for new eps '''
+    def remove_anime(self, id):
+        ''' removes anime from list to check for new eps '''
+        pass
         # will add this later when I've learned more about abstracting data interfaces
     def get_all_subscribed_anime(self):
         ''' gets anilist IDs of all anime that users have requested to be notified about '''
@@ -71,15 +78,20 @@ class AnimeChecker:
         if anime_dict['status'] == 'RELEASING':
             return True
         return False
-    #def check_new_episode(self, prev_num_episodes, anime_dict):
+    def check_new_episode(self, prev_num_episodes, anime_dict):
         ''' returns true if new episode has been released '''
+        pass
         # if no prev_num_episodes
-    #def get_num_released_episodes(self, anime_dict):
-    #def get_anime_streaming_sites(self):
-#class AnimeSiteUser:
-    #def get_user_anime(self):
-    ## return, id, title, image, num_episodes released, time til next release
-    #def get_synced_sites(self):
+    def get_num_released_episodes(self, anime_dict):
+        pass
+    def get_anime_streaming_sites(self):
+        pass
+class AnimeSiteUser:
+    def get_user_anime(self):
+        ## return, id, title, image, num_episodes released, time til next release
+        pass
+    def get_synced_sites(self):
+        pass
 
 class Anime:
     def __init__(self, id, num_episodes):
