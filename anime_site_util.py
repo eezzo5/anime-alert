@@ -2,12 +2,12 @@ class StreamingSite:
     def get_episode_streaming_link(self, anime):
         pass
 class AnimeListSite:
-    import requests
     def can_connect(self):
         pass
     def auth_user(self):
         pass
     def get_user_anime(self, user):
+        import requests
         query = '''
             query ($id: Int) {
                 MediaListCollection(userId: $id, type:ANIME, status:CURRENT){
@@ -86,15 +86,31 @@ class AnimeChecker:
         pass
     def get_anime_streaming_sites(self):
         pass
-class AnimeSiteUser:
-    def get_user_anime(self):
-        ## return, id, title, image, num_episodes released, time til next release
-        pass
-    def get_synced_sites(self):
-        pass
 
 class Anime:
     def __init__(self, id, num_episodes):
         self.id = id
-        self.num_episodes = num_episodes
+        self.num_episodes_released = num_episodes
+
+    def update_data(self):
+        pass
+        # not sure if needed
+    def is_airing(self):
+        pass
+        # not sure if needed
+
+class User:
+
+    def __init__(self, email, phone, site_tokens):
+        self.email = email
+        self.phone = phone
+        self.site_tokens = site_tokens
+
+    def get_user_anime(self, site):
+        ## return, id, title, image, num_episodes released, time til next release
+        pass
+    def has_auth_token(self):
+        pass
+    def get_synced_sites(self):
+        pass
 
