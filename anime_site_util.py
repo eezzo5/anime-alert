@@ -1,9 +1,46 @@
 #class StreamingSite:
     #def get_episode_streaming_link(self, anime):
-#class AnimeListSite:
+class AnimeListSite:
+    import requests
     #def can_connect(self):
     #def auth_user(self):
-    #def get_user_anime(self):
+    def get_user_anime(self, user):
+        query = '''
+            query ($id: Int) {
+                MediaListCollection(userId: $id, type:ANIME, status:CURRENT){
+                    lists {
+                        entries {
+                            media {
+                                id
+                                title {
+                                    userPreferred
+                                }
+                                coverImage {
+                                    medium
+                                }
+                                nextAiringEpisode{
+                                    episode
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            '''
+
+        variables = {
+            'id': user
+        }
+
+        url = 'https://graphql.anilist.co'
+
+        response = requests.post(url, json={'query': query, 'variables': variables})
+
+        json_response = response.json()
+
+        user_anime_data = json_response['data']['MediaListCollection']['lists'][0]['entries']
+
+        return user_anime_data
 
 class AnimeChecker:
     #def start(self):
