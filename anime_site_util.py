@@ -8,6 +8,7 @@ class AnimeListSite:
         pass
     def get_user_anime(self, user):
         import requests
+        # iss: needs to get content (currently viewing) from all lists and merge them
         query = '''
             query ($id: Int) {
                 MediaListCollection(userId: $id, type:ANIME, status:CURRENT){
@@ -73,17 +74,37 @@ class AnimeChecker:
         # using static list of current seasons anime for now
         subscribed_anime = [21,97940,108632,116006,97938]
         return subscribed_anime
-    def check_anime_airing(self, anime_dict):
+
+    def is_airing(self, anime_dict):
         ''' returns true if currently airing, else false '''
         if anime_dict['status'] == 'RELEASING':
             return True
         return False
+
+    def get_anime_status(self, anime_dict):
+        ''' returns true if currently airing, else false '''
+        status = anime_dict['status']
+        return status
+
     def check_new_episode(self, prev_num_episodes, anime_dict):
         ''' returns true if new episode has been released '''
         pass
         # if no prev_num_episodes
+
     def get_num_released_episodes(self, anime_dict):
-        pass
+        ''' returns the number of released episodes for anime '''
+        status = self.get_anime_status(anime_dict)
+        if status == 'RELEASING':
+            next_airing = anime_dict["nextAiringEpisode"]["episode"]
+            latest_episode = next_airing - 1
+        elif status == 'NOT_YET_RELEASED':
+            latest_episode = 0
+        elif status == 'CANCELLED' or status == 'FINISHED':
+            latest_episode = anime_dict["episodes"]
+            if not latest_episode:
+                latest_episode = 0
+        return latest_episode
+
     def get_anime_streaming_sites(self):
         pass
 
