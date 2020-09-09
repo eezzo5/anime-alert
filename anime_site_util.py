@@ -11,7 +11,7 @@ class AnimeListSite:
 
     def __init__(self, endpoint_url='https://graphql.anilist.co',
                  # auth stuff is for site's anime data retrieval requirements, not end user auth stuff
-                 req_auth=False, auth_req_captcha=False, auth_user=conf.uname, auth_pass=conf.pw, token=None,
+                 req_auth=False, auth_req_captcha=False, auth_user=conf.UNAME, auth_pass=conf.PW, token=None,
                  query_method='POST',
                  anime_query_template='',
                  anime_bulk_query_template='',
@@ -52,18 +52,24 @@ class AnimeListSite:
         self.user_anime_list_query_template = user_anime_list_query_template
 
     def can_connect(self):
+        """ tests if site can be connected to """
         pass
 
-    def auth_user(self):
+    def authenticate_app_to_site(self):
+        """ auths site for API usage if auth is required and no captcha """
         pass
 
     def get_anime_data(self, anime_id):
+        """ returns anime object with data from anime site """
         pass
 
-    def get_bulk_anime_data(self, anime_id):
+    def get_bulk_anime_data(self, anime_id_list):
+        """ returns list of anime objects matching list of ids given """
         pass
 
     def get_user_anime_list(self, user):
+        """ returns list of anime objects representing anime user currently watching """
+        # iss: this should return anime objects
         import requests
 
         variables = {
@@ -84,9 +90,8 @@ class Anime:
 
     # add status tuples here (for our standard data format)
     def __init__(self, anilist_id, title, status, tot_num_ep,# iss: pick which params are req and default vals
-                 next_air_ep, time_until_air, ext_links,
-                 cover_med_imglink, cover_lg_imglink, cover_xl_imglink, last_updated,
-                 subscribers):
+                 ext_links, cover_med_imglink, cover_lg_imglink, cover_xl_imglink, last_updated,
+                 next_air_ep=None, time_until_air=None, subscribers=None):
         self.anilist_id = anilist_id
         self.title = title
         self.status = status
@@ -94,7 +99,7 @@ class Anime:
         self.next_air_ep = next_air_ep
         self.time_until_air = time_until_air
         self.ext_links = ext_links
-        self.cover_med_imglink = cover_med_imglink
+        self.cover_med_imglink = cover_med_imglink  # iss: image links need to be a method, question: how to avoid sending many requests to api to retrieve image link
         self.cover_lg_imglink = cover_lg_imglink
         self.cover_xl_imglink = cover_xl_imglink
         self.last_updated = last_updated
@@ -104,7 +109,7 @@ class Anime:
         self.latest_ep_stream_link = self.get_latest_ep_stream_link()
 
         # Relationships with other objs
-        self.subscribers = subscribers # these should be user objects
+        self.subscribers = subscribers  # these should be a list of user objects
         # question: should there be relationship between anime and streamingsite?
 
     #this method might call AnimeSite method or StreamingSite method
@@ -113,6 +118,19 @@ class Anime:
 
     #this method might call AnimeSite method or StreamingSite method
     def get_released_ep_stream_link(self, stream_site):
+        pass
+
+    def get_all_subscribers(self):
+        """ returns list of all subscribers (user objects) associated with anime instance """
+        subscribers = self.subscribers
+        return subscribers
+
+    def add_subscriber(self, user):
+        """ adds a user to anime subscribers list. returns true if added else false (user already subscribed) """
+        pass
+
+    def remove_subscriber(self, user):
+        """ removes a user from anime subscribers list. returns true if removed else false (user wasn't subscribed) """
         pass
 
     def get_anime_status(self):
@@ -129,6 +147,7 @@ class Anime:
 
     def get_num_eps_released(self):
         """ returns the number of released episodes for anime """
+        # iss: use tuples for statuses
         status = self.status
         if status == 'RELEASING':
             next_airing = self.next_air_ep
@@ -160,6 +179,7 @@ class Anime:
     def update_data(self, anime_site):
         pass
 
+
 class User:
 
     def __init__(self, email, phone, site_tokens_dict=None, anime_list=None):
@@ -176,7 +196,7 @@ class User:
         return anime_list
 
     def get_fresh_user_anime_list(self):
-        ## return, id, title, image, num_episodes released, time til next release
+        # return, id, title, image, num_episodes released, time til next release
         # for each site_token
             #create site obj and call isauth
             # if isauth call site.getuseranime()
