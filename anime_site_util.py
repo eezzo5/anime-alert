@@ -6,8 +6,10 @@ class StreamingSite:
     def get_episode_streaming_link(self, anime):
         pass
 
+
 class AnimeListSite:
     import conf
+    # question: should animelistsite and animedatasource be two separate objects?
 
     def __init__(self, endpoint_url='https://graphql.anilist.co',
                  # auth stuff is for site's anime data retrieval requirements, not end user auth stuff
@@ -44,7 +46,7 @@ class AnimeListSite:
         self.auth_req_captcha = auth_req_captcha
         self.auth_user = auth_user
         self.auth_pass = auth_pass
-        self.token = token
+        self.app_token = token
 
         self.query_method = query_method
         self.anime_query_template = anime_query_template
@@ -67,13 +69,46 @@ class AnimeListSite:
         """ returns list of anime objects matching list of ids given """
         pass
 
-    def get_user_anime_list(self, user):
+    def subscriber_has_token(self, subscriber):
+        """ checks if subscriber has token for this site """
+        pass
+
+    def get_subscriber_token(self, subscriber):
+        """ gets subscriber token value or returns false, error """
+        pass
+
+    def is_subscriber_auth(self, subscriber):
+        """ checks if subscriber's token is valid and usable. if token expired this will attempt to refresh token
+        returns True/False, error
+        """
+        # maybe this calls self.subscriber_has_token?
+        pass
+
+    # this may belong in api code
+    def refresh_site_token(self, subscriber):
+        """ attempts to refresh subscriber's site token using old token value or returns False, error """
+        pass
+
+    def get_subscriber_user_id(self, subscriber):
+        """ gets the user id for the site or return None, error """
+        # maybe this calls self.is_subscriber_auth?
+        pass
+
+    def get_user_anime_list(self, subscriber):
         """ returns list of anime objects representing anime user currently watching """
-        # iss: this should return anime objects
         import requests
+        # iss: this should return anime objects and perform logic listed in comments below
+
+        # check if subscriber tokens contains token for this site
+        # check if token is auth
+        sub_user_id, error = self.get_subscriber_user_id(subscriber)
+        # do data retrieval
+        # do anime obj creation
+        # call calculated fields stuff and store in appropriate anime obj attr
+        # return
 
         variables = {
-            'id': user
+            'id': sub_user_id
         }
 
         url = self.endpoint_url
@@ -86,66 +121,7 @@ class AnimeListSite:
 
         return user_anime_data
 
-class Anime:
-
-    # add status tuples here (for our standard data format)
-    def __init__(self, anilist_id, title, status, tot_num_ep,# iss: pick which params are req and default vals
-                 ext_links, cover_med_imglink, cover_lg_imglink, cover_xl_imglink, last_updated,
-                 next_air_ep=None, time_until_air=None, subscribers=None):
-        self.anilist_id = anilist_id
-        self.title = title
-        self.status = status
-        self.tot_num_ep = tot_num_ep
-        self.next_air_ep = next_air_ep
-        self.time_until_air = time_until_air
-        self.ext_links = ext_links
-        self.cover_med_imglink = cover_med_imglink  # iss: image links need to be a method, question: how to avoid sending many requests to api to retrieve image link
-        self.cover_lg_imglink = cover_lg_imglink
-        self.cover_xl_imglink = cover_xl_imglink
-        self.last_updated = last_updated
-
-        #this may be bad practice, check
-        self.num_episodes_released = self.get_num_eps_released()
-        self.latest_ep_stream_link = self.get_latest_ep_stream_link()
-
-        # Relationships with other objs
-        self.subscribers = subscribers  # these should be a list of user objects
-        # question: should there be relationship between anime and streamingsite?
-
-    #this method might call AnimeSite method or StreamingSite method
-    def get_latest_ep_stream_link(self, stream_site):
-        pass
-
-    #this method might call AnimeSite method or StreamingSite method
-    def get_released_ep_stream_link(self, stream_site):
-        pass
-
-    def get_all_subscribers(self):
-        """ returns list of all subscribers (user objects) associated with anime instance """
-        subscribers = self.subscribers
-        return subscribers
-
-    def add_subscriber(self, user):
-        """ adds a user to anime subscribers list. returns true if added else false (user already subscribed) """
-        pass
-
-    def remove_subscriber(self, user):
-        """ removes a user from anime subscribers list. returns true if removed else false (user wasn't subscribed) """
-        pass
-
-    def get_anime_status(self):
-        """ gets anime status when last checked """
-        status = self.status
-        return status
-
-    def is_airing(self):
-        """ returns true if airing, else false """
-        status = self.status
-        if status == 'RELEASING':
-            return True
-        return False
-
-    def get_num_eps_released(self):
+    def calc_num_eps_released(self, anime_obj):
         """ returns the number of released episodes for anime """
         # iss: use tuples for statuses
         status = self.status
@@ -160,53 +136,12 @@ class Anime:
                 latest_episode_num = 0
         return latest_episode_num
 
-    def check_new_episode(self, anime_site):
-        ''' returns true if new episode has been released
-        may need to update self.info before returning
-        '''
+    def get_stream_options(self, anime_obj):
+        """ gets streaming site options listed in anime site and returns it in a dictionary """
         pass
 
-    def get_stream_opts(self, anime_site):
-        """
-        checks external links for known streaming sites and returns them in a list of dicts
-            {
-                "name":"CrunchyRoll",
-                "url":"https://crunchyroll.com/<anime-name>",
-            },
-        """
+    def get_latest_ep_stream_links(self, anime_obj):
         pass
 
-    def update_data(self, anime_site):
+    def calc_released_ep_stream_link(self, anime_obj):
         pass
-
-
-class User:
-
-    def __init__(self, email, phone, site_tokens_dict=None, anime_list=None):
-        self.email = email
-        self.phone = phone
-
-        # relationships with obj
-        self.site_tokens_dict = site_tokens_dict # site tokens, not an obj
-        self.anime_list = anime_list
-
-    def get_saved_user_anime_list(self):
-        """ gets local user anime list if it exists (must have called get_fresh_user_anime_list) """
-        anime_list = self.anime_list
-        return anime_list
-
-    def get_fresh_user_anime_list(self):
-        # return, id, title, image, num_episodes released, time til next release
-        # for each site_token
-            #create site obj and call isauth
-            # if isauth call site.getuseranime()
-            # win win win no matta what
-            # create anime obj and add to self.anime_list
-        pass
-
-    def has_site_token(self):
-        pass
-
-    def get_synced_sites(self):
-        pass
-
