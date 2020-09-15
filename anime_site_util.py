@@ -9,11 +9,8 @@ class StreamingSite:
 
 class AnimeListSite:
     import conf
-    # question: should animelistsite and animedatasource be two separate objects?
 
-    def __init__(self, endpoint_url='https://graphql.anilist.co',
-                 # auth stuff is for site's anime data retrieval requirements, not end user auth stuff
-                 req_auth=False, auth_req_captcha=False, auth_user=conf.UNAME, auth_pass=conf.PW, token=None,
+    def __init__(self, endpoint_url='https://graphql.anilist.co', auth_required=False, app_token=None,
                  query_method='POST',
                  anime_query_template='',
                  anime_bulk_query_template='',
@@ -42,11 +39,9 @@ class AnimeListSite:
                  ):
 
         self.endpoint_url = endpoint_url
-        self.req_auth = req_auth
-        self.auth_req_captcha = auth_req_captcha
-        self.auth_user = auth_user
-        self.auth_pass = auth_pass
-        self.app_token = token
+        # auth stuff
+        self.auth_required = auth_required
+        self.app_token = app_token
 
         self.query_method = query_method
         self.anime_query_template = anime_query_template
@@ -57,8 +52,44 @@ class AnimeListSite:
         """ tests if site can be connected to """
         pass
 
-    def authenticate_app_to_site(self):
-        """ auths site for API usage if auth is required and no captcha """
+    def can_get_anime_data(self):
+        """ checks if app token is valid and usable. if token expired this will attempt to refresh token
+        returns True/False, error
+        """
+        # if app doesn't req auth return false, auth not required error
+        # maybe this calls self.get_subscriber_token?
+        pass
+
+    def can_get_subscriber_data(self, subscriber):
+        """ checks if subscriber token is valid and usable. if token expired this will attempt to refresh token
+        returns True/False, error
+        """
+        # if app doesn't req auth return false, auth not required error
+        # maybe this calls self.get_subscriber_token?
+        pass
+
+    def set_app_token(self):
+        """ sets apps auth token for site and checks if it is usable (calls can_get_anime_data) """
+        pass
+
+    def remove_app_token(self):
+        """ removes app token """
+        pass
+
+    def refresh_token(self, token):
+        """
+        attempts to refresh subscriber's site token using old token value or returns False, error
+        this will remove self.app_token if token cannot be refreshed
+        """
+        pass
+
+    def get_subscriber_token(self, subscriber):
+        """ gets subscriber token value for site or returns false, error """
+        pass
+
+    def get_subscriber_user_id(self, subscriber):
+        """ gets the user id for the site or return None, error """
+        # maybe this calls self.is_subscriber_auth?
         pass
 
     def get_anime_data(self, anime_id):
@@ -67,31 +98,6 @@ class AnimeListSite:
 
     def get_bulk_anime_data(self, anime_id_list):
         """ returns list of anime objects matching list of ids given """
-        pass
-
-    def subscriber_has_token(self, subscriber):
-        """ checks if subscriber has token for this site """
-        pass
-
-    def get_subscriber_token(self, subscriber):
-        """ gets subscriber token value or returns false, error """
-        pass
-
-    def is_subscriber_auth(self, subscriber):
-        """ checks if subscriber's token is valid and usable. if token expired this will attempt to refresh token
-        returns True/False, error
-        """
-        # maybe this calls self.subscriber_has_token?
-        pass
-
-    # this may belong in api code
-    def refresh_site_token(self, subscriber):
-        """ attempts to refresh subscriber's site token using old token value or returns False, error """
-        pass
-
-    def get_subscriber_user_id(self, subscriber):
-        """ gets the user id for the site or return None, error """
-        # maybe this calls self.is_subscriber_auth?
         pass
 
     def get_user_anime_list(self, subscriber):
@@ -137,7 +143,7 @@ class AnimeListSite:
         return latest_episode_num
 
     def get_stream_options(self, anime_obj):
-        """ gets streaming site options listed in anime site and returns it in a dictionary """
+        """ returns dictionary of sites (name, link) that stream anime """
         pass
 
     def get_latest_ep_stream_links(self, anime_obj):
