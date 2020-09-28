@@ -37,11 +37,6 @@ class Anime:
         stream_options = self.stream_options
         return stream_options
 
-    def get_all_subscribers(self):
-        """ returns list of all subscribers (user objects) associated with anime instance """
-        subscribers = self.subscribers
-        return subscribers
-
     def add_subscriber(self, user):
         """ adds a user to anime subscribers list. returns true if added else false (user already subscribed) """
         pass
@@ -49,11 +44,6 @@ class Anime:
     def remove_subscriber(self, user):
         """ removes a user from anime subscribers list. returns true if removed else false (user wasn't subscribed) """
         pass
-
-    def get_anime_status(self):
-        """ gets anime status when last checked """
-        status = self.status
-        return status
 
     def is_airing(self):
         """ returns true if airing, else false """
@@ -95,23 +85,27 @@ class Subscriber:
         self.site_tokens_dict = site_tokens_dict  # site tokens, not an obj
         self.anime_list = anime_list
 
-    def get_user_anime_list(self):
-        """ gets local user anime list if it exists (must have called get_fresh_user_anime_list) """
-        anime_list = self.anime_list
-        return anime_list
-
     def has_site_tokens(self):
         """ returns true if user has any site tokens """
+        if self.site_tokens_dict:
+            return True
+        return False
+
+    def add_site_token(self, endpoint_url, token_val):
+        """ adds token to site_tokens_dict if in correct format, replaces if already existing for site """
+        # check valid format
+        # check for endpoint_url in self.site_tokens_dicts
+        # if exists, replace token val
+        # if not, add new key,val pair to dict
         pass
 
-    def add_site_token(self, token_dict):
-        """ adds token to site_tokens_dict if in correct format """
-        pass
-
-    def remove_site_token(self, token_dict):
-        """ removes token from site_tokens_dict if present """
+    def remove_site_token(self, endpoint_url):
+        """ removes token from site_tokens_dict if present. if not, returns false """
+        # check for endpoint_url in self.tokens_dict
+        # if present, remove and return true
+        # if not, remove and return false
         pass
 
     def get_authorized_sites(self):
-        """ returns list of site names that user has tokens for """
+        """ returns list of endpoint_urls that user has tokens for """
         pass

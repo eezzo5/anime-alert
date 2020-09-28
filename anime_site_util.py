@@ -6,6 +6,14 @@ class StreamingSite:
     def get_episode_streaming_link(self, anime):
         pass
 
+class SiteAuthConfig:
+    """ Class that handles Oauth2.0 logic.
+    Will define authentication endpoint, client_id, client_secret, redirect_uri,
+                                    and code_challenge/verifier generation logic
+    Will have methods to generate start auth requests info, generate tokens, and refresh tokens for subscribers
+    This may be gratuitous if we cannot make animeListSite querying and response parsing sufficiently flexible to
+    onboard sites dynamically without having to extend the class to add new stuff
+    """
 
 class AnimeListSite:
     import conf
@@ -53,7 +61,7 @@ class AnimeListSite:
         pass
 
     def can_get_anime_data(self):
-        """ checks if app token is valid and usable. if token expired this will attempt to refresh token
+        """ checks if app token is valid and usable if required. if token expired this will attempt to refresh token
         returns True/False, error
         """
         # if app doesn't req auth return false, auth not required error
